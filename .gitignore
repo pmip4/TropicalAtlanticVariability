@@ -163,4 +163,4 @@ cython_debug/
 #full data files
 data/full_files
 data/full_files/*
-*.nc
+
