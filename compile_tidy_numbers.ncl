@@ -156,7 +156,8 @@ do fi = 0, dimsizes(files)-1
   else
     variables(21)=variables@_FillValue   
   end if
-
+  delete([/nino34,atl3/])
+  
   ;ATL3 Period
   headers(22)="ATL3 Period"
   variables(22)=stat_ts_var(data_dir+files(fi),"atlantic_nino","dominant_period_interann",ts_opt)
