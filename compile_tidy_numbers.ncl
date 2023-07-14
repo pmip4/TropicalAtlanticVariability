@@ -89,11 +89,15 @@ do fi = 0, dimsizes(files)-1
 
   ;Atlantic Meridional Mode
   headers(10)="AMM mean"
-  variables(10)=stat_ts_var(data_dir+files(fi),",atlantic_meridional_mode","mean",ts_opt_abs)
+  variables(10)=stat_ts_var(data_dir+files(fi),"atlantic_meridional_mode","mean",ts_opt_abs)
 
   ;Atlantic Meridional Mode
   headers(11)="AMM stddev"
-  variables(11)=stat_ts_var(data_dir+files(fi),",atlantic_meridional_mode","stddev",ts_opt)
+  variables(11)=stat_ts_var(data_dir+files(fi),"atlantic_meridional_mode","stddev",ts_opt)
+
+  ;AMM Annual Cycle
+  headers(9)="AMM AnnCycAmp"
+  variables(9)=stat_ts_var(data_dir+files(fi),"atlantic_meridional_mode","AnnCycAmp",ts_opt)
 
   ;South Asian Monsoon Area
   headers(12)="SAMSmonsoon area mean"
@@ -111,29 +115,29 @@ do fi = 0, dimsizes(files)-1
   headers(15)="SAMSmonsoon rain stddev"
   variables(15)=stat_ts_var(data_dir+files(fi),"monsoon_rain_SAMS","stddev",ts_opt)
 
-  ;Subcontinent annual rain
+  ;NE Brazil annual rain
   headers(16)="NEB rain ann"
   variables(16)=stat_ts_var(data_dir+files(fi),"ipcc_NEB_pr","mean",ts_opt_abs)
 
-  ;Subcontinent summer rain
+  ;NE Brazil summer rain
   ts_opt_jja_abs=ts_opt_abs
   ts_opt_jja_abs@SEASON="JJA"
   headers(17)="NEB rain jja"
   variables(17)=stat_ts_var(data_dir+files(fi),"ipcc_NEB_pr","mean",ts_opt_jja_abs)
 
-  ;Subcontinent winter rain
+  ;NE Brazil winter rain
   ts_opt_djf_abs=ts_opt_abs
   ts_opt_djf_abs@SEASON="DJF"
   headers(18)="NEB rain djf"
   variables(18)=stat_ts_var(data_dir+files(fi),"ipcc_NEB_pr","mean",ts_opt_djf_abs)
 
-  ;Subcontinent summer rain stddev
+  ;NE Brazil summer rain stddev
   ts_opt_jja=ts_opt
   ts_opt_jja@SEASON="JJA"
   headers(19)="NEB rain jja stddev"
   variables(19)=stat_ts_var(data_dir+files(fi),"ipcc_NEB_pr","stddev",ts_opt_jja)
 
-  ;Subcontinent winter rain stddev
+  ;NE Brazil winter rain stddev
   ts_opt_djf=ts_opt
   ts_opt_djf@SEASON="DJF"
   headers(20)="NEB rain djf stddev"
@@ -144,48 +148,39 @@ do fi = 0, dimsizes(files)-1
   ts_opt_smooth@SMOOTH=True
   ts_opt_smooth@nave=5
   nino34=read_ts(data_dir+files(fi),"nino34",ts_opt_smooth)
-  iod=read_ts(data_dir+files(fi),"iod_timeseries_mon",ts_opt_smooth)
-  iobm=read_ts(data_dir+files(fi),"tropical_indian_ocean",ts_opt_smooth)
-  eeio=read_ts(data_dir+files(fi),"east_eq_indian_ocean",ts_opt_smooth)
+  atl3=read_ts(data_dir+files(fi),"atlantic_nino",ts_opt_smooth) 
 
-  headers(21)="r(nino34.iod)"
-  if (.not.all(ismissing(nino34))).and.(.not.all(ismissing(iod))) then
-    variables(21)=escorc(nino34,iod)   
+  headers(21)="r(atl3.nino34)"
+  if (.not.all(ismissing(nino34))).and.(.not.all(ismissing(atl3))) then
+    variables(21)=escorc(nino34,atl3)   
   else
     variables(21)=variables@_FillValue   
   end if
 
-  headers(22)="r(iod.iobm)"
-  if .not.all(ismissing(iobm)).and..not.all(ismissing(iod)) then
-    variables(22)=escorc(iobm,iod)   
-  else
-    variables(22)=variables@_FillValue   
-  end if
-  
-  headers(23)="r(iod.eeio)"
-  if .not.all(ismissing(eeio)).and..not.all(ismissing(iod)) then
-    variables(23)=escorc(eeio,iod)   
-  else
-    variables(23)=variables@_FillValue   
-  end if
-  delete([/nino34,iod,iobm,eeio/])
-
-  ;IOD Period
-  headers(24)="IOD Period"
-  variables(24)=stat_ts_var(data_dir+files(fi),"iod_timeseries_mon","dominant_period_interann",ts_opt)
+  ;ATL3 Period
+  headers(22)="ATL3 Period"
+  variables(22)=stat_ts_var(data_dir+files(fi),"atlantic_nino","dominant_period_interann",ts_opt)
 
   ;ENSO Period
-  headers(25)="ENSO Period"
-  variables(25)=stat_ts_var(data_dir+files(fi),"nino34","dominant_period_interann",ts_opt)
+  headers(23)="ENSO Period"
+  variables(23)=stat_ts_var(data_dir+files(fi),"nino34","dominant_period_interann",ts_opt)
  
   ;IOD Period
-  headers(26)="IOBM Period"
-  variables(26)=stat_ts_var(data_dir+files(fi),"tropical_indian_ocean","dominant_period_interann",ts_opt)
+  headers(24)="AMM Period"
+  variables(24)=stat_ts_var(data_dir+files(fi),"atlantic_meridional_mode","dominant_period_interann",ts_opt)
 
-  ;IOD Period
-  headers(27)="EEIO Period"
-  variables(27)=stat_ts_var(data_dir+files(fi),"east_eq_indian_ocean","dominant_period_interann",ts_opt)
-  
+  headers(25)="ATL3-sst-interann-stdev"
+  variables(25)=extract_latlon_areastat(data_dir+files(fi),"sst_spatialstddev_ann",(/-3.,3./),(/-20.,0./),"mean")
+
+  headers(26)="ATL3-pr-interann-stdev"
+  variables(26)=extract_latlon_areastat(data_dir+files(fi),"pr_spatialstddev_ann",(/-3.,3./),(/-20.,0./),"mean")
+
+  headers(27)="ATL3-sst-interjja-stdev"
+  variables(27)=extract_latlon_areastat(data_dir+files(fi),"sst_spatialstddev_jja",(/-3.,3./),(/-20.,0./),"mean")
+
+  headers(28)="ATL3-pr-interjja-stdev"
+  variables(28)=extract_latlon_areastat(data_dir+files(fi),"pr_spatialstddev_jja",(/-3.,3./),(/-20.,0./),"mean")
+
   ;write out to file
   exists=ind(.not.ismissing(headers))
   if fi.eq.0 then
