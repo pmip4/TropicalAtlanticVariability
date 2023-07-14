@@ -53,8 +53,8 @@ function hasSSTvars {
 CVDP_DATA_DIR=`pwd`"/data/full_files"
 REPO_DATA_DIR=`pwd`"/data" #relative to here
 ATL3_vars="atl3_pattern_mon,atl3_pr_regression_mon,atl3_tas_regression_mon,atl3_timeseries_mon,atl3_spectra"
-SST_vars="sst_spatialmean_ann,sst_spatialmean_djf,sst_spatialmean_jja,atlantic_nino,atlantic_meridional_mode,nino34"
-PR_vars="pr_spatialmean_ann,pr_spatialmean_djf,pr_spatialmean_jja,monsoon_rain_SAMS,monsoon_area_SAMS,monsoon_rain_NAF,monsoon_area_NAF,ipcc_NEB_pr,ipcc_SAH_pr,ipcc_WAF_pr"
+SST_vars="sst_spatialmean_ann,sst_spatialmean_djf,sst_spatialmean_jja,sst_spatialstddev_ann,sst_spatialstddev_jja,atlantic_nino,atlantic_meridional_mode,nino34"
+PR_vars="pr_spatialmean_ann,pr_spatialmean_djf,pr_spatialmean_jja,pr_spatialstddev_ann,pr_spatialstddev_jja,monsoon_rain_SAMS,monsoon_area_SAMS,monsoon_rain_NAF,monsoon_area_NAF,ipcc_NEB_pr,ipcc_SAH_pr,ipcc_WAF_pr"
 TAS_vars="tas_spatialmean_ann,tas_spatialmean_djf,tas_spatialmean_jja,ipcc_NEB_tas,ipcc_SAH_tas,ipcc_WAF_tas"
 
 cd $CVDP_DATA_DIR
