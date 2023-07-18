@@ -149,6 +149,7 @@ do fi = 0, dimsizes(files)-1
   ts_opt_smooth@nave=5
   nino34=read_ts(data_dir+files(fi),"nino34",ts_opt_smooth)
   atl3=read_ts(data_dir+files(fi),"atlantic_nino",ts_opt_smooth) 
+  amo=read_ts(data_dir+files(fi),"amo_timeseries_lowpass_mon",ts_opt_smooth)
 
   headers(21)="r(atl3.nino34)"
   if (.not.all(ismissing(nino34))).and.(.not.all(ismissing(atl3))) then
@@ -156,8 +157,16 @@ do fi = 0, dimsizes(files)-1
   else
     variables(21)=variables@_FillValue   
   end if
-  delete([/nino34,atl3/])
+
+  headers(29)="r(atl3.amo)"
+  if (.not.all(ismissing(amo))).and.(.not.all(ismissing(atl3))) then
+    variables(29)=escorc(amo,atl3)   
+  else
+    variables(29)=variables@_FillValue   
+  end if  
+  delete([/nino34,atl3,amo/])
   
+
   ;ATL3 Period
   headers(22)="ATL3 Period"
   variables(22)=stat_ts_var(data_dir+files(fi),"atlantic_nino","dominant_period_interann",ts_opt)
@@ -181,6 +190,8 @@ do fi = 0, dimsizes(files)-1
 
   headers(28)="ATL3-pr-interjja-stdev"
   variables(28)=extract_latlon_areastat(data_dir+files(fi),"pr_spatialstddev_jja",(/-3.,3./),(/-20.,0./),"mean")
+
+  ;variable 29 is a correlation above
 
   ;write out to file
   exists=ind(.not.ismissing(headers))
