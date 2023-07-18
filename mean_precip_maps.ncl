@@ -18,11 +18,7 @@ if MAKE_PLOT.eq.OUTPUT_PLOT_DATA then
    print("The code is not set-up for both options to be True, and will do all computation and not output anythign is both are False")
    exit
 end if
-if MAKE_PLOT then
-    OUTPUT_TYPE="pdf"; either "png" or "pdf"
-else
-    OUTPUT_TYPE="png"; either "png" or "pdf"
-end if
+OUTPUT_TYPE="png"; either "png" or "pdf"
 VERBOSE=False ;if True, provides a modicum of more information about whats goign on in the plots - used for debugging mainly.
 
 vars=(/"pr_spatialmean_ann","pr_spatialmean_djf","pr_spatialmean_jja"/)
