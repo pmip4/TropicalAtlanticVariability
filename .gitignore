@@ -163,4 +163,5 @@ cython_debug/
 #full data files
 data/full_files
 data/full_files/*
+attribution/*cvdp_data/*
 data/*.nc
