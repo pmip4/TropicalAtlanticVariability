@@ -16,6 +16,19 @@ function hasATL3vars {
   fi
 }  
 
+function hasAMOvars {
+  hasAMOvars_DIR=$1
+  hasAMOvars_filename=$2
+  hasAMOvars_amo_vars=`ncdump -h $hasAMOvars_DIR/$hasAMOvars_filename | grep float | grep amo_ | cut -d\( -f1 | cut -d\  -f2`
+  if [[ $hasAMOvars_amo_vars == *"amo_timeseries_lowpass_mon"* ]] 
+  then
+    return 1
+  else
+    return 0
+  fi
+}  
+
+
 function hasTASvars {
   hasTASvars_DIR=$1
   hasTASvars_filename=$2
@@ -56,6 +69,7 @@ ATL3_vars="atl3_pattern_mon,atl3_pr_regression_mon,atl3_tas_regression_mon,atl3_
 SST_vars="sst_spatialmean_ann,sst_spatialmean_djf,sst_spatialmean_jja,sst_spatialstddev_ann,sst_spatialstddev_jja,atlantic_nino,atlantic_meridional_mode,nino34"
 PR_vars="pr_spatialmean_ann,pr_spatialmean_djf,pr_spatialmean_jja,pr_spatialstddev_ann,pr_spatialstddev_jja,monsoon_rain_SAMS,monsoon_area_SAMS,monsoon_rain_NAF,monsoon_area_NAF,ipcc_NEB_pr,ipcc_SAH_pr,ipcc_WAF_pr"
 TAS_vars="tas_spatialmean_ann,tas_spatialmean_djf,tas_spatialmean_jja,ipcc_NEB_tas,ipcc_SAH_tas,ipcc_WAF_tas"
+AMO_vars="amo_timeseries_lowpass_mon"
 
 cd $CVDP_DATA_DIR
 ncfiles=`ls {piControl,midHolocene-cal-adj,lgm-cal-adj,lig127k-cal-adj,abrupt4xCO2}/*{piControl,midHolocene-cal-adj,lgm-cal-adj,lig127k-cal-adj,abrupt4xCO2}.cvdp_data.*-*.nc C20*nc`
@@ -70,6 +84,10 @@ do
     ncks -A -v $SST_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
     ncks -A -v $PR_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
     ncks -A -v $TAS_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
+    hasAMOvars $CVDP_DATA_DIR $ncfile
+    if [ $? == 1 ]; then
+      ncks -A -v $AMO_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
+    fi 
   fi 
 done
 
