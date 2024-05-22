@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # This script will create a .tar.gz file containing the data and put it on a sensible web-location for downloading.
 # Written by Chris Brierley and only to be used by Chris.
 
@@ -69,10 +69,12 @@ ATL3_vars="atl3_pattern_mon,atl3_pr_regression_mon,atl3_tas_regression_mon,atl3_
 SST_vars="sst_spatialmean_ann,sst_spatialmean_djf,sst_spatialmean_jja,sst_spatialstddev_ann,sst_spatialstddev_jja,atlantic_nino,atlantic_meridional_mode,nino34"
 PR_vars="pr_spatialmean_ann,pr_spatialmean_djf,pr_spatialmean_jja,pr_spatialstddev_ann,pr_spatialstddev_jja,monsoon_rain_SAMS,monsoon_area_SAMS,monsoon_rain_NAF,monsoon_area_NAF,ipcc_NEB_pr,ipcc_SAH_pr,ipcc_WAF_pr"
 TAS_vars="tas_spatialmean_ann,tas_spatialmean_djf,tas_spatialmean_jja,ipcc_NEB_tas,ipcc_SAH_tas,ipcc_WAF_tas"
+PR_AR6_vars="pr_spatialmean_ann,pr_spatialmean_djf,pr_spatialmean_jja,pr_spatialstddev_ann,pr_spatialstddev_jja,monsoon_rain_SAMS,monsoon_area_SAMS,monsoon_rain_NAF,monsoon_area_NAF,ipcc_NES_pr,ipcc_SAH_pr,ipcc_WAF_pr"
+TAS_AR6_vars="tas_spatialmean_ann,tas_spatialmean_djf,tas_spatialmean_jja,ipcc_NES_tas,ipcc_SAH_tas,ipcc_WAF_tas"
 AMO_vars="amo_timeseries_lowpass_mon"
 
 cd $CVDP_DATA_DIR
-ncfiles=`ls {piControl,midHolocene-cal-adj,lgm-cal-adj,lig127k-cal-adj,abrupt4xCO2}/*{piControl,midHolocene-cal-adj,lgm-cal-adj,lig127k-cal-adj,abrupt4xCO2}.cvdp_data.*-*.nc C20*nc`
+ncfiles=`ls {piControl,midHolocene-cal-adj,midPliocene-eoi400,lgm-cal-adj,lig127k-cal-adj,abrupt4xCO2}/*{piControl,midHolocene-cal-adj,midPliocene-eoi400,lgm-cal-adj,lig127k-cal-adj,abrupt4xCO2}.cvdp_data.*-*.nc C20*nc`
 echo $ncfiles
 cd $REPO_DATA_DIR
 for ncfile in $ncfiles
@@ -82,8 +84,13 @@ do
   if [ $? == 1 ]; then
     ncks -O -v $ATL3_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
     ncks -A -v $SST_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
-    ncks -A -v $PR_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
-    ncks -A -v $TAS_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
+    if [[ $ncfile == *"Plio"* ]]; then
+      ncks -A -v $PR_AR6_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
+      ncks -A -v $TAS_AR6_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
+    else
+      ncks -A -v $PR_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
+      ncks -A -v $TAS_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
+    fi
     hasAMOvars $CVDP_DATA_DIR $ncfile
     if [ $? == 1 ]; then
       ncks -A -v $AMO_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
