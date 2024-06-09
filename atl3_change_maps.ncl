@@ -1,7 +1,7 @@
 load "cvdp_data.functions.ncl"
 
 plot_regions=(/(/-20,20/),(/-70,30/)/);lat and lons of the edge of the plots
-expts=(/"midHolocene-cal-adj","lig127k-cal-adj","lgm-cal-adj","abrupt4xCO2"/)
+expts=(/"midHolocene-cal-adj","lig127k-cal-adj","midPliocene-eoi400","abrupt4xCO2"/)
 
 ;some plot switches
 MAKE_PLOT=True;if True, this will actually output the plot in it's pretty form
@@ -11,11 +11,11 @@ if MAKE_PLOT.eq.OUTPUT_PLOT_DATA then
    print("The code is not set-up for both options to be True, and will do all computation and not output anythign is both are False")
    exit
 end if
-OUTPUT_TYPE="png"; either "png" or "pdf"
+OUTPUT_TYPE="pdf"; either "png" or "pdf"
 VERBOSE=False ;if True, provides a modicum of more information about whats goign on in the plots - used for debugging mainly.
 OVERLAY_PREIND=True
 
-expts=(/"midHolocene-cal-adj","lig127k-cal-adj","lgm-cal-adj","abrupt4xCO2"/)
+expts=(/"midHolocene-cal-adj","lig127k-cal-adj","midPliocene-eoi400","abrupt4xCO2"/)
 plot_str="plots/atl3_change_maps"
 plot_letters=(/(/"a","b"/),(/"c","d"/),(/"e","f"/),(/"g","h"/),(/"i","j"/),(/"k","l"/)/)
 
