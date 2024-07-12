@@ -8,7 +8,7 @@ load "cvdp_data.functions.ncl"
 
 mode_name="atl3";variable in the file
 
-expts=(/"piControl","midHolocene-cal-adj","lig127k-cal-adj","lgm-cal-adj","abrupt4xCO2"/)
+expts=(/"piControl","midHolocene-cal-adj","lig127k-cal-adj","midPliocene-eoi400","abrupt4xCO2"/)
 expts_color=(/"grey24","black","darkgreen","dodgerblue4","yellowgreen","firebrick","orangered2"/)
 gcms_all=(/"ACCESS-ESM1-5","AWI-ESM-1-1-LR","BCC-CSM1-1","CCSM4","CESM2","CNRM-CM5","CNRM-CM6-1","COSMOS-ASO","CSIRO-Mk3-6-0","CSIRO-Mk3L-1-2","EC-EARTH-2-2","EC-Earth3-LR","FGOALS-f3-L","FGOALS-g2","FGOALS-g3","FGOALS-s2","GISS-E2-1-G","GISS-E2-R","HadGEM2-CC","HadGEM2-ES","HadGEM3-GC31-LL","INM-CM4-8","IPSL-CM5A-LR","IPSL-CM6A-LR","KCM1-2-2","MIROC-ES2L","MIROC-ESM","MPI-ESM1-2-LR","MPI-ESM-P","MRI-CGCM3","MRI-ESM2-0","NESM3","NorESM1-F","NorESM2-LM","UofT-CCSM-4"/)
 gcms_CMIP6=(/"ACCESS-ESM1-5","AWI-ESM-1-1-LR","CESM2","CNRM-CM6-1","EC-Earth3-LR","FGOALS-f3-L","FGOALS-g3","GISS-E2-1-G","HadGEM3-GC31-LL","INM-CM4-8","IPSL-CM6A-LR","MIROC-ES2L","MPI-ESM1-2-LR","MRI-ESM2-0","NESM3","NorESM2-LM"/)
