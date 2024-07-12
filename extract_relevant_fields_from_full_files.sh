@@ -62,15 +62,27 @@ function hasSSTvars {
   fi
 }  
 
+function isPMIP4 {
+  PMIP4_models="ACCESS-ESM1-5 AWI-ESM-2-1-LR AWI-ESM-1-1-LR CESM2 CNRM-CM6-1 EC-Earth3-LR FGOALS-f3-L FGOALS-g3 GISS-E2-1-G HadGEM3-GC31-LL INM-CM4-8 IPSL-CM6A-LR MIROC-ES2L MPI-ESM1-2-LR MRI-ESM2-0 NESM3 NorESM1-F NorESM2-LM UofT-CCSM-4"
+  isPMIP4_filename=$1
+  model_name=$(echo $isPMIP4_filename | cut -d_ -f1)  # Corrected variable name from filename to isPMIP4_filename
+  IFS=' ' read -ra PMIP4_models_array <<< "$PMIP4_models"  # Split PMIP4_models into an array
+  for model in "${PMIP4_models_array[@]}"; do
+    if [[ $model_name == $model ]]; then
+      return 1
+    fi
+  done
+  return 0
+}
 
 CVDP_DATA_DIR=`pwd`"/data/full_files"
 REPO_DATA_DIR=`pwd`"/data" #relative to here
 ATL3_vars="atl3_pattern_mon,atl3_pr_regression_mon,atl3_tas_regression_mon,atl3_timeseries_mon,atl3_spectra"
 SST_vars="sst_spatialmean_ann,sst_spatialmean_djf,sst_spatialmean_jja,sst_spatialstddev_ann,sst_spatialstddev_jja,atlantic_nino,atlantic_meridional_mode,nino34"
-PR_vars="pr_spatialmean_ann,pr_spatialmean_djf,pr_spatialmean_jja,pr_spatialstddev_ann,pr_spatialstddev_jja,monsoon_rain_SAMS,monsoon_area_SAMS,monsoon_rain_NAF,monsoon_area_NAF,ipcc_NEB_pr,ipcc_SAH_pr,ipcc_WAF_pr"
-TAS_vars="tas_spatialmean_ann,tas_spatialmean_djf,tas_spatialmean_jja,ipcc_NEB_tas,ipcc_SAH_tas,ipcc_WAF_tas"
-PR_AR6_vars="pr_spatialmean_ann,pr_spatialmean_djf,pr_spatialmean_jja,pr_spatialstddev_ann,pr_spatialstddev_jja,monsoon_rain_SAMS,monsoon_area_SAMS,monsoon_rain_NAF,monsoon_area_NAF,ipcc_NES_pr,ipcc_SAH_pr,ipcc_WAF_pr"
-TAS_AR6_vars="tas_spatialmean_ann,tas_spatialmean_djf,tas_spatialmean_jja,ipcc_NES_tas,ipcc_SAH_tas,ipcc_WAF_tas"
+PR_vars="pr_spatialmean_ann,pr_spatialmean_djf,pr_spatialmean_jja,pr_spatialstddev_ann,pr_spatialstddev_jja,monsoon_rain_SAMS,monsoon_area_SAMS,monsoon_rain_NAF,monsoon_area_NAF,ipcc_NEB_pr"
+TAS_vars="tas_spatialmean_ann,tas_spatialmean_djf,tas_spatialmean_jja,ipcc_NEB_tas"
+PR_AR6_vars="pr_spatialmean_ann,pr_spatialmean_djf,pr_spatialmean_jja,pr_spatialstddev_ann,pr_spatialstddev_jja,monsoon_rain_SAMS,monsoon_area_SAMS,monsoon_rain_NAF,monsoon_area_NAF,ipcc_NES_pr"
+TAS_AR6_vars="tas_spatialmean_ann,tas_spatialmean_djf,tas_spatialmean_jja,ipcc_NES_tas"
 AMO_vars="amo_timeseries_lowpass_mon"
 
 cd $CVDP_DATA_DIR
@@ -80,20 +92,26 @@ cd $REPO_DATA_DIR
 for ncfile in $ncfiles
 do
   echo working on $ncfile
+  isPMIP4 ${ncfile##*/}
+  if [ $? == 1 ]; then
+    outfile=PMIP4/${ncfile##*/}
+    else
+    outfile=PMIP3/${ncfile##*/}
+  fi
   hasATL3vars $CVDP_DATA_DIR $ncfile
   if [ $? == 1 ]; then
-    ncks -O -v $ATL3_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
-    ncks -A -v $SST_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
+    ncks -O -v $ATL3_vars $CVDP_DATA_DIR/$ncfile $outfile
+    ncks -A -v $SST_vars $CVDP_DATA_DIR/$ncfile $outfile
     if [[ $ncfile == *"Plio"* ]]; then
-      ncks -A -v $PR_AR6_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
-      ncks -A -v $TAS_AR6_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
+      ncks -A -v $PR_AR6_vars $CVDP_DATA_DIR/$ncfile $outfile
+      ncks -A -v $TAS_AR6_vars $CVDP_DATA_DIR/$ncfile $outfile
     else
-      ncks -A -v $PR_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
-      ncks -A -v $TAS_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
+      ncks -A -v $PR_vars $CVDP_DATA_DIR/$ncfile $outfile
+      ncks -A -v $TAS_vars $CVDP_DATA_DIR/$ncfile $outfile
     fi
     hasAMOvars $CVDP_DATA_DIR $ncfile
     if [ $? == 1 ]; then
-      ncks -A -v $AMO_vars $CVDP_DATA_DIR/$ncfile ${ncfile##*/}
+      ncks -A -v $AMO_vars $CVDP_DATA_DIR/$ncfile $outfile
     fi 
   fi 
 done
