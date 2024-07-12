@@ -52,6 +52,11 @@ begin
   else
     data_dir=present_dir+"/../data/"
   end if
+  if isatt(variable_name,"ensemble") then
+    data_dir=data_dir+variable_name@ensemble+"/"
+  else
+    data_dir=data_dir+"{PMIP4,PMIP3}/"
+  end if
   if isatt(name_str,"quiet") then
     QUIET=name_str@quiet
   else
@@ -60,7 +65,8 @@ begin
   ncfiles=systemfunc("ls "+data_dir+"/*.cvdp_data.[0-9]*-*.nc")
   if any(ismissing(ncfiles)) then
     if .not.QUIET then
-     print("find_files_wVar: There are no cvdp_data netcdf files in "+data_dir+". You may want to run the download_cvdp_data_data.sh script")
+    print(variable_name)
+    print("find_files_wVar: There are no cvdp_data netcdf files in "+data_dir+". You may want to run the download_cvdp_data_data.sh script")
     end if
     ncfiles_wVar="missing"
   else
