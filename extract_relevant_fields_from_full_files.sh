@@ -51,6 +51,18 @@ function hasPRvars {
   fi
 }  
 
+function isAR6regions {
+  hasPRvars_DIR=$1
+  hasPRvars_filename=$2
+  hasPRvars_pr_vars=`ncdump -h $hasPRvars_DIR/$hasPRvars_filename | grep float | grep pr | cut -d\( -f1 | cut -d\  -f2`
+  if [[ $hasPRvars_pr_vars == *"ipcc_NES_pr"* ]]; then
+    return 1
+  else
+    return 0
+  fi
+}  
+
+
 function hasSSTvars {
   hasSSTvars_DIR=$1
   hasSSTvars_filename=$2
@@ -79,10 +91,10 @@ CVDP_DATA_DIR=`pwd`"/data/full_files"
 REPO_DATA_DIR=`pwd`"/data" #relative to here
 ATL3_vars="atl3_pattern_mon,atl3_pr_regression_mon,atl3_tas_regression_mon,atl3_timeseries_mon,atl3_spectra"
 SST_vars="sst_spatialmean_ann,sst_spatialmean_djf,sst_spatialmean_jja,sst_spatialstddev_ann,sst_spatialstddev_jja,atlantic_nino,atlantic_meridional_mode,nino34"
-PR_vars="pr_spatialmean_ann,pr_spatialmean_djf,pr_spatialmean_jja,pr_spatialstddev_ann,pr_spatialstddev_jja,monsoon_rain_SAMS,monsoon_area_SAMS,monsoon_rain_NAF,monsoon_area_NAF,ipcc_NEB_pr"
-TAS_vars="tas_spatialmean_ann,tas_spatialmean_djf,tas_spatialmean_jja,ipcc_NEB_tas"
-PR_AR6_vars="pr_spatialmean_ann,pr_spatialmean_djf,pr_spatialmean_jja,pr_spatialstddev_ann,pr_spatialstddev_jja,monsoon_rain_SAMS,monsoon_area_SAMS,monsoon_rain_NAF,monsoon_area_NAF,ipcc_NES_pr"
-TAS_AR6_vars="tas_spatialmean_ann,tas_spatialmean_djf,tas_spatialmean_jja,ipcc_NES_tas"
+PR_vars="pr_spatialmean_ann,pr_spatialmean_djf,pr_spatialmean_jja,pr_spatialstddev_ann,pr_spatialstddev_jja,monsoon_rain_SAMS,monsoon_area_SAMS,monsoon_rain_NAF,monsoon_area_NAF"
+TAS_vars="tas_spatialmean_ann,tas_spatialmean_djf,tas_spatialmean_jja"
+AR6_vars="ipcc_NES_pr,ipcc_NES_tas"
+AR5_vars="ipcc_NEB_pr,ipcc_NEB_tas"
 AMO_vars="amo_timeseries_lowpass_mon"
 
 cd $CVDP_DATA_DIR
@@ -102,17 +114,18 @@ do
   if [ $? == 1 ]; then
     ncks -O -v $ATL3_vars $CVDP_DATA_DIR/$ncfile $outfile
     ncks -A -v $SST_vars $CVDP_DATA_DIR/$ncfile $outfile
-    if [[ $ncfile == *"Plio"* ]]; then
-      ncks -A -v $PR_AR6_vars $CVDP_DATA_DIR/$ncfile $outfile
-      ncks -A -v $TAS_AR6_vars $CVDP_DATA_DIR/$ncfile $outfile
-    else
-      ncks -A -v $PR_vars $CVDP_DATA_DIR/$ncfile $outfile
-      ncks -A -v $TAS_vars $CVDP_DATA_DIR/$ncfile $outfile
-    fi
-    hasAMOvars $CVDP_DATA_DIR $ncfile
-    if [ $? == 1 ]; then
-      ncks -A -v $AMO_vars $CVDP_DATA_DIR/$ncfile $outfile
-    fi 
+    ncks -A -v $PR_vars $CVDP_DATA_DIR/$ncfile $outfile
+    ncks -A -v $TAS_vars $CVDP_DATA_DIR/$ncfile $outfile
+  fi 
+  isAR6regions $CVDP_DATA_DIR $ncfile
+  if [[ $? == 1 ]]; then
+    ncks -A -v $AR6_vars $CVDP_DATA_DIR/$ncfile $outfile
+  else
+    ncks -A -v $AR5_vars $CVDP_DATA_DIR/$ncfile $outfile
+  fi
+  hasAMOvars $CVDP_DATA_DIR $ncfile
+  if [ $? == 1 ]; then
+    ncks -A -v $AMO_vars $CVDP_DATA_DIR/$ncfile $outfile
   fi 
 done
 

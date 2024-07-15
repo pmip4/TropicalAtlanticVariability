@@ -14,8 +14,8 @@ expts=(/"piControl","historical","midHolocene-cal-adj","lgm-cal-adj","lig127k-ca
 expts_color=(/"grey24","black","darkgreen","dodgerblue4","yellowgreen","firebrick","orangered2"/)
 
 ;some plot switches
-MAKE_MEAN_PLOT=False;if True, this will actually output the plot in it's pretty form
-MAKE_ATL3_PLOT=True;if True, this will actually output the plot in it's pretty form
+MAKE_MEAN_PLOT=True;if True, this will actually output the plot in it's pretty form
+MAKE_ATL3_PLOT=False;if True, this will actually output the plot in it's pretty form
 if MAKE_MEAN_PLOT.eq.MAKE_ATL3_PLOT then 
    print("You set both MAKE_MEAN_PLOT and MAKE_ATL3_PLOT to "+MAKE_MEAN_PLOT+". The code is not set-up for both options to be the same")
    exit
@@ -66,11 +66,6 @@ end if
     opt@lbTitleOn=True
   else
     opt@lbLabelBarOn=False
-    opt_pan@lbOrientation="Vertical"
-    opt@lbTitlePosition="Left"
-    opt_pan@gsnPanelLabelBar=True
-    opt_pan@lbTitleOn=True
-    opt_pan@lbLabelFontHeightF=0.018
     opt@gsnRightString=""
     opt_pan@dims=(/1,2/)
   end if
@@ -104,6 +99,14 @@ if MAKE_MEAN_PLOT then
   t_opt@cnLevelSpacingF = 1
   t_opt@cnFillPalette="WhiteBlueGreenYellowRed"
   t_opt_pan=opt_pan
+  t_opt_pan@lbOrientation="Vertical"
+  t_opt_pan@lbTitlePosition="Left"
+  t_opt_pan@lbTitleDirection     = "Across"                          ; letter angle
+  t_opt_pan@lbTitleAngleF        = 90.                               ; title angle
+  t_opt_pan@lbTitleFontHeightF   = 0.02                              ; font height
+  t_opt_pan@gsnPanelLabelBar=True
+  t_opt_pan@lbTitleOn=True
+  t_opt_pan@lbLabelFontHeightF=0.018
   t_opt_pan@gsnPanelBottom=0.5
   if BIAS_not_ABSOLUTE then 
     t_opt_pan@gsnPanelLeft=0.
@@ -140,6 +143,15 @@ if MAKE_MEAN_PLOT then
   p_opt_pan=opt_pan
   p_opt_pan@gsnPanelTop=0.5
   p_opt_pan@gsnPanelBottom=0.
+  p_opt_pan@lbOrientation="Vertical"
+  p_opt_pan@lbTitlePosition="Left"
+  p_opt_pan@lbTitleDirection     = "Across"                          ; letter angle
+  p_opt_pan@lbTitleAngleF        = 90.                               ; title angle
+  p_opt_pan@lbTitleFontHeightF   = 0.02                              ; font height
+  p_opt_pan@gsnPanelLabelBar=True
+  p_opt_pan@lbTitleOn=True
+  p_opt_pan@lbLabelFontHeightF=0.018
+
   if BIAS_not_ABSOLUTE then 
     p_opt_pan@gsnPanelLeft=0.
     p_opt_pan@gsnPanelRight=0.5
@@ -184,8 +196,8 @@ if MAKE_ATL3_PLOT then
   i_opt@cnLevelSpacingF = 0.2
   i_opt@cnFillPalette="CBR_coldhot"
   i_opt_pan=opt_pan
-  i_opt_pan@gsnPanelTop=0.5
-  i_opt_pan@gsnPanelBottom=0.25
+  i_opt_pan@gsnPanelTop=1.
+  i_opt_pan@gsnPanelBottom=0.5
   if BIAS_not_ABSOLUTE then 
     i_opt_pan@gsnPanelLeft=0.
     i_opt_pan@gsnPanelRight=0.5
@@ -213,7 +225,7 @@ if MAKE_ATL3_PLOT then
   ip_opt@cnLevelSelectionMode = "ExplicitLevels"   
   ip_opt@cnLevels=(/-2.,-1.,-0.5,-0.2,-0.1,0.1,0.2,0.5,1.,2./)
   ip_opt_pan=opt_pan
-  ip_opt_pan@gsnPanelTop=0.25
+  ip_opt_pan@gsnPanelTop=0.5
   ip_opt_pan@gsnPanelBottom=0.0
   if BIAS_not_ABSOLUTE then 
     ip_opt_pan@gsnPanelLeft=0.
