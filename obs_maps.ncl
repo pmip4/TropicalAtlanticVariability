@@ -20,7 +20,7 @@ if MAKE_MEAN_PLOT.eq.MAKE_ATL3_PLOT then
    print("You set both MAKE_MEAN_PLOT and MAKE_ATL3_PLOT to "+MAKE_MEAN_PLOT+". The code is not set-up for both options to be the same")
    exit
 end if
-OUTPUT_TYPE="pdf"; either "png" or "pdf"
+OUTPUT_TYPE="png"; either "png" or "pdf"
 TS_NOT_TAS=True ;if True use SST rather TAS in the figure
 ENSEMBLE="PMIP4";choose which ensemble to use: options are "PMIP4","PMIP3" or "BOTH"
 BIAS_not_ABSOLUTE=False ;if True this will plot the ensemble mean bias - rather than the ensemble property 
@@ -73,10 +73,11 @@ end if
   ;Rather than immediately sending the plot to a file, this plot first opens a wks and panels within it. 
 if MAKE_MEAN_PLOT then
   if BIAS_not_ABSOLUTE then
-    wks=gsn_open_wks(OUTPUT_TYPE,paper_str+"bias_"+ENSEMBLE)
+    plot_str=paper_str+"bias_"+ENSEMBLE
   else
-    wks=gsn_open_wks(OUTPUT_TYPE,paper_str+"absolute_"+ENSEMBLE)
+    plot_str=paper_str+"absolute_"+ENSEMBLE
   end if
+  wks=gsn_open_wks(OUTPUT_TYPE,plot_str)
   wks@VERBOSE=VERBOSE
 
   ;Start with the mean temperature
@@ -127,6 +128,7 @@ if MAKE_MEAN_PLOT then
     t_opt_pan@dims=(/2,2/)
     t_opt@gsnLeftString=(/"a","b","c","d"/)
     t_opt@lbTitleString="SST (~F35~J~F21~C)"
+    t_opt_pan@lbTitleString="SST (~F35~J~F21~C)"
     plotCVDPcomparisonMaps((/"C20-Reanalysis",expt/),field,wks,t_opt,t_opt_pan)
   end if
 
@@ -170,9 +172,12 @@ if MAKE_MEAN_PLOT then
   else
     p_opt_pan@dims=(/2,2/)
     p_opt@gsnLeftString=(/"a","b","c","d"/)
-    p_opt@lbTitleString="(mm/day)"
+    p_opt_pan@lbTitleString="Precipitation (mm/day)"
+    p_opt_pan@lbTitleString="Precipitation (mm/day)"
     plotCVDPcomparisonMaps((/"C20-Reanalysis",expt/),pr_field,wks,p_opt,p_opt_pan)
   end if
+  frame(wks)
+  delete(wks)
 end if; MAKE_PLOT
 
 if MAKE_ATL3_PLOT then
@@ -184,10 +189,11 @@ if MAKE_ATL3_PLOT then
   end if
 
   if BIAS_not_ABSOLUTE then
-    wks=gsn_open_wks(OUTPUT_TYPE,paper_str+"bias_"+ENSEMBLE)
+    plot_str=paper_str+"bias_"+ENSEMBLE
   else
-    wks=gsn_open_wks(OUTPUT_TYPE,paper_str+"absolute_"+ENSEMBLE)
+    plot_str=paper_str+"absolute_"+ENSEMBLE
   end if
+  wks=gsn_open_wks(OUTPUT_TYPE,plot_str)
   wks@VERBOSE=VERBOSE
   ;Move onto ATL3 temperatures
   i_opt=opt
@@ -196,8 +202,9 @@ if MAKE_ATL3_PLOT then
   i_opt@cnLevelSpacingF = 0.2
   i_opt@cnFillPalette="CBR_coldhot"
   i_opt_pan=opt_pan
-  i_opt_pan@gsnPanelTop=1.
+  i_opt_pan@gsnPanelTop=0.9
   i_opt_pan@gsnPanelBottom=0.5
+  i_opt_pan@lbTitlePosition="Top"
   if BIAS_not_ABSOLUTE then 
     i_opt_pan@gsnPanelLeft=0.
     i_opt_pan@gsnPanelRight=0.5
@@ -226,7 +233,8 @@ if MAKE_ATL3_PLOT then
   ip_opt@cnLevels=(/-2.,-1.,-0.5,-0.2,-0.1,0.1,0.2,0.5,1.,2./)
   ip_opt_pan=opt_pan
   ip_opt_pan@gsnPanelTop=0.5
-  ip_opt_pan@gsnPanelBottom=0.0
+  ip_opt_pan@gsnPanelBottom=0.1
+  ip_opt_pan@lbTitlePosition="Top"
   if BIAS_not_ABSOLUTE then 
     ip_opt_pan@gsnPanelLeft=0.
     ip_opt_pan@gsnPanelRight=0.5
@@ -249,3 +257,8 @@ if MAKE_ATL3_PLOT then
   frame(wks)
   delete(wks)
 end if; MAKE_PLOT  
+
+if OUTPUT_TYPE.eq."png" then
+  system("convert "+plot_str+"."+OUTPUT_TYPE+" -trim output.png")
+  system("mv output.png "+plot_str+"."+OUTPUT_TYPE)
+end if
