@@ -109,3 +109,8 @@ plotDiffEnsMnMaps(expts(1),"piControl",vars(2:3),wks,opt,opt_pan)
 
 frame(wks)
 delete(wks)
+
+if OUTPUT_TYPE.eq."png" then
+  system("convert "+plot_str+"."+OUTPUT_TYPE+" -trim output.png")
+  system("mv output.png "+plot_str+"."+OUTPUT_TYPE)
+end if 

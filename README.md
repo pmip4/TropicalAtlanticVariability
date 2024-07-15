@@ -11,10 +11,10 @@ There are two sources of data being used here, although both come via the Climat
 ## Figures
 - [X] 1. Comparison of ensemble mean patterns of climatological SST and rainfall (piControl vs reanalysis)
 - [X] 2. Comparison of AZM regression patterns of SST and rainfall (piControl vs reanalysis)
-- [ ] 3. midHolocene and lig127k changes in mean state for SST, rainfall in DJF & JJA
-- [ ] 4. midHolocene and lig127k changes in monthly regression patterns for SST and rainfall
-- [ ] 5. PlioMIP2 and 4xCO2 mean state changes in SST and pr for DJF and JJA
-- [ ] 6. PlioMIP2 and 4xCO2 changes in monthly regression patterns for SST and rainfall
+- [X] 3. midHolocene and lig127k changes in mean state for SST, rainfall in DJF & JJA
+- [X] 4. midHolocene and lig127k changes in monthly regression patterns for SST and rainfall
+- [X] 5. PlioMIP2 and 4xCO2 mean state changes in SST and pr for DJF and JJA
+- [X] 6. PlioMIP2 and 4xCO2 changes in monthly regression patterns for SST and rainfall
 - [ ] 7. LGM changes (combining mean state and rainfall)
 - [X] 8. Violin plot showing changes in AZM variability (exclude lgm?)
 - [X] 9. Scatter plot showing the relationship between the mean changes in ATL3 region and its variability
