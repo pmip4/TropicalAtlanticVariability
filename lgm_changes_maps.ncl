@@ -12,7 +12,7 @@ plot_regions=(/(/-20,20/),(/-70,30/)/);lat and lons of the edge of the plots
 ;some plot switches
 OUTPUT_TYPE="png"; either "png" or "pdf"
 VERBOSE=False ;if True, provides a modicum of more information about whats goign on in the plots - used for debugging mainly.
-ENSEMBLE="PMIP3";choose which ensemble to use: options are "PMIP4","PMIP3" or "BOTH"
+ENSEMBLE="PMIP4";choose which ensemble to use: options are "PMIP4","PMIP3" or "BOTH"
 
 vars=(/"sst_spatialmean_ann","atl3_pattern_mon","pr_spatialmean_ann","atl3_pr_regression_mon"/)
 vars@ensemble=ENSEMBLE

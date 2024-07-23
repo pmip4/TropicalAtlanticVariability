@@ -8,7 +8,7 @@ function hasATL3vars {
   hasATL3vars_DIR=$1
   hasATL3vars_filename=$2
   hasATL3vars_atl3_vars=`ncdump -h $hasATL3vars_DIR/$hasATL3vars_filename | grep float | grep atl3 | cut -d\( -f1 | cut -d\  -f2`
-  if [[ $hasATL3vars_atl3_vars == *"atl3_pr_regression_mon"* ]] && [[ $hasATL3vars_atl3_vars == *"atl3_pattern_mon"* ]] && [[ $hasATL3vars_atl3_vars == *"atl3_tas_regression_mon"* ]] && [[ $hasATL3vars_atl3_vars == *"atl3_timeseries_mon"* ]]
+  if [[ $hasATL3vars_atl3_vars == *"atl3_pattern_mon"* ]] && [[ $hasATL3vars_atl3_vars == *"atl3_tas_regression_mon"* ]] && [[ $hasATL3vars_atl3_vars == *"atl3_timeseries_mon"* ]]
   then
     return 1
   else
@@ -75,7 +75,7 @@ function hasSSTvars {
 }  
 
 function isPMIP4 {
-  PMIP4_models="ACCESS-ESM1-5 AWI-ESM-2-1-LR AWI-ESM-1-1-LR CESM2 CNRM-CM6-1 EC-Earth3-LR FGOALS-f3-L FGOALS-g3 GISS-E2-1-G HadGEM3-GC31-LL INM-CM4-8 IPSL-CM6A-LR MIROC-ES2L MPI-ESM1-2-LR MRI-ESM2-0 NESM3 NorESM1-F NorESM2-LM UofT-CCSM-4"
+  PMIP4_models="ACCESS-ESM1-5 AWI-ESM-2-1-LR AWI-ESM-1-1-LR CESM2 CESM2-FV2 CNRM-CM6-1 EC-Earth3-LR FGOALS-f3-L FGOALS-g3 GISS-E2-1-G HadGEM3-GC31-LL INM-CM4-8 IPSL-CM6A-LR MIROC-ES2L MPI-ESM1-2-LR MRI-ESM2-0 NESM3 NorESM1-F NorESM2-LM UofT-CCSM-4"
   isPMIP4_filename=$1
   model_name=$(echo $isPMIP4_filename | cut -d_ -f1)  # Corrected variable name from filename to isPMIP4_filename
   IFS=' ' read -ra PMIP4_models_array <<< "$PMIP4_models"  # Split PMIP4_models into an array
@@ -89,9 +89,9 @@ function isPMIP4 {
 
 CVDP_DATA_DIR=`pwd`"/data/full_files"
 REPO_DATA_DIR=`pwd`"/data" #relative to here
-ATL3_vars="atl3_pattern_mon,atl3_pr_regression_mon,atl3_tas_regression_mon,atl3_timeseries_mon,atl3_spectra"
+ATL3_vars="atl3_pattern_mon,atl3_tas_regression_mon,atl3_timeseries_mon,atl3_spectra"
 SST_vars="sst_spatialmean_ann,sst_spatialmean_djf,sst_spatialmean_jja,sst_spatialstddev_ann,sst_spatialstddev_jja,atlantic_nino,atlantic_meridional_mode,nino34"
-PR_vars="pr_spatialmean_ann,pr_spatialmean_djf,pr_spatialmean_jja,pr_spatialstddev_ann,pr_spatialstddev_jja,monsoon_rain_SAMS,monsoon_area_SAMS,monsoon_rain_NAF,monsoon_area_NAF"
+PR_vars="pr_spatialmean_ann,pr_spatialmean_djf,pr_spatialmean_jja,pr_spatialstddev_ann,pr_spatialstddev_jja,monsoon_rain_SAMS,monsoon_area_SAMS,monsoon_rain_NAF,monsoon_area_NAF,atl3_pr_regression_mon"
 TAS_vars="tas_spatialmean_ann,tas_spatialmean_djf,tas_spatialmean_jja"
 AR6_vars="ipcc_NES_pr,ipcc_NES_tas"
 AR5_vars="ipcc_NEB_pr,ipcc_NEB_tas"
