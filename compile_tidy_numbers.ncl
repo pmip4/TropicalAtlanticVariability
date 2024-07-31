@@ -187,16 +187,36 @@ do fi = 0, dimsizes(files)-1
   variables(27)=stat_ts_var(data_dir+files(fi),"atlantic_meridional_mode","dominant_period_interann",ts_opt)
 
   headers(28)="ATL3-sst-interann-stdev"
-  variables(28)=extract_latlon_areastat(data_dir+files(fi),"sst_spatialstddev_ann",(/-3.,3./),(/-20.,0./),"mean")
+  fil=addfile(data_dir+files(fi),"r")
+  if .not.isfilevar(fil,"sst_spatialstddev_ann") then
+    variables(28)=variables@_FillValue
+  else
+    variables(28)=extract_latlon_areastat(data_dir+files(fi),"sst_spatialstddev_ann",(/-3.,3./),(/-20.,0./),"mean")
+  end if
 
   headers(29)="ATL3-pr-interann-stdev"
-  variables(29)=extract_latlon_areastat(data_dir+files(fi),"pr_spatialstddev_ann",(/-3.,3./),(/-20.,0./),"mean")
+  fil=addfile(data_dir+files(fi),"r")
+  if .not.isfilevar(fil,"pr_spatialstddev_ann") then
+    variables(29)=variables@_FillValue
+  else
+    variables(29)=extract_latlon_areastat(data_dir+files(fi),"pr_spatialstddev_ann",(/-3.,3./),(/-20.,0./),"mean")
+  end if
 
   headers(30)="ATL3-sst-interjja-stdev"
-  variables(30)=extract_latlon_areastat(data_dir+files(fi),"sst_spatialstddev_jja",(/-3.,3./),(/-20.,0./),"mean")
+  fil=addfile(data_dir+files(fi),"r")
+  if .not.isfilevar(fil,"sst_spatialstddev_jja") then
+    variables(30)=variables@_FillValue
+  else
+    variables(30)=extract_latlon_areastat(data_dir+files(fi),"sst_spatialstddev_jja",(/-3.,3./),(/-20.,0./),"mean")
+  end if
 
   headers(31)="ATL3-pr-interjja-stdev"
-  variables(31)=extract_latlon_areastat(data_dir+files(fi),"pr_spatialstddev_jja",(/-3.,3./),(/-20.,0./),"mean")
+  fil=addfile(data_dir+files(fi),"r")
+  if .not.isfilevar(fil,"pr_spatialstddev_jja") then
+    variables(31)=variables@_FillValue
+  else
+    variables(31)=extract_latlon_areastat(data_dir+files(fi),"pr_spatialstddev_jja",(/-3.,3./),(/-20.,0./),"mean")
+  end if
 
   ;write out to file
   exists=ind(.not.ismissing(headers))
